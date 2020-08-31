@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-3">
+                <h1>AI Predictions</h1>
+                {% for n in ai_predictions%}
+                {{n}}
+                <br>
+                {% endfor %}
+            </div>
+            <div class="col-sm ">
+                <h1>Recent Human Predictions</h1>
+                <!-- option to show more than 4? -->
+
+                {% set display_length = 4%}
+                        {% if (human_predictions| length) < 4 %}
+                        {% set display_length =  (human_predictions| length)%}
+                        {% endif %}
+                {% for i in range(display_length) %}
+                <div class="card">
+                    <div class="card-body">
+                        <button class = "seemore{{i}}" data-toggle="collapse" data-target=#{{i}} style="float: right;">Show
+                            all</button>
+                        
+
+
+                        
+                        {% for j in range(0,5) %}
+
+                        {{sorted_names_win[j] ~": " ~human_predictions[i][sorted_names_win[j].replace(" ","_").lower()]}} <br>
+                        {% endfor %}
+                        
+
+                        <p id={{i}} class="collapse">
+                            
+                            {% for j in range(5,(sorted_names_win| length)) %}
+                            
+
+                            {{sorted_names_win[j] ~": " ~human_predictions[i][sorted_names_win[j].replace(" ","_").lower()]}} <br>
+                            {% endfor %}
+                        </p>
+
+                        <script>
+                            $('.seemore{{i}}').click(function () {
+                                var $this = $(this);
+                                $this.toggleClass('seemore{{i}}');
+                                if ($this.hasClass('seemore{{i}}')) {
+                                    $this.text('Show all');
+                                } else {
+                                    $this.text('Show less');
+                                }
+                            });
+                        </script>
+                    </div>
+                </div>
+
+
+
+                <br>
+                {% endfor %}
+            </div>
+            <div class="col-sm offset-md-1" id="right">
+                <h1>Your Prediction</h1>
+                
+                {% set allow_prediction = true %}
+                {% if (allow_prediction) %}
+                        
+                        
+                <form action="/add" method="POST">
+
+                   
+
+
+
+                    {% for i in sorted_names_win%}
+                    
+                    <label for={{i}}>{{i}}</label><br>
+                    <input type="number" name="{{i}}" min = "0" max= "82" style="width: 7em" required><br>
+                    <br>
+
+
+                    {% endfor %}
+
+                    <label for="email">Email (if you want us to let you know how your prediction did at the end of the season)</label> <br>
+                    <input type="email" name = "email"> <br> <br>
+
+                    
+
+                    <input type="submit" value="Submit">
+
+
+                </form>
+
+                {% else %}
+
+                <p>Entering new predictions is currently unavailable, as each team has already played 10 games. Come back next season! </p>
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+</html>

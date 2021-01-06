@@ -1,4 +1,4 @@
-# NBAPredict: Available at [nba.ctsahn.me](https://nba.ctsahn.me)
+# NBAPredict: Available at [nbapredictai.herokuapp.com](https://nbapredictai.herokuapp.com)
 
 This Flask/Bootstrap/Heroku app compares human predictions versus AI predictions of NBA standings at the end of the season.  
 
